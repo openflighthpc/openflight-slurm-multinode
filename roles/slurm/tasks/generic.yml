@@ -61,7 +61,7 @@
     warn: no
   register: result
   when:
-    - "'nodes' in group_names"
+    - "'compute' in group_names"
     - not slurm_conf_exists.stat.exists
   tags:
     - update
@@ -71,7 +71,7 @@
     nodeinfo: "{{ groups.nodes | map('extract', hostvars, 'result') | map(attribute='stdout') |list }}"
   run_once: yes
   when:
-    - "'nodes' in group_names"
+    - "'compute' in group_names"
     - not slurm_conf_exists.stat.exists
   tags:
     - update

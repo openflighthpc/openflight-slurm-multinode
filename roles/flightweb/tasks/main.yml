@@ -1,0 +1,36 @@
+- name: Generate Let's Encrypt certificate
+  command: "/opt/flight/bin/flight www cert-gen --cert-type lets-encrypt --domain {{ access_host }} --email certs@openflighthpc.org"
+  register: letsencryptout
+  failed_when: "letsencryptout.rc < 0"
+  when:
+    - "generate_certs"
+
+- name: Certificate Debug Update
+  debug:
+    msg: "Let's Encrypt certificate generation failed, will attempt self-signed" 
+  when:
+    - "generate_certs"
+    - "letsencryptout.rc != 0"
+
+- name: Generate Self-Signed certificate 
+  command: "/opt/flight/bin/flight www cert-gen --cert-type self-signed --domain {{ access_host }}"
+  when:
+    - "generate_certs"
+    - "letsencryptout.rc != 0"
+
+- name: Configure web suite domain
+  command: "/opt/flight/bin/flight web-suite set-domain {{ access_host }}"
+
+- name: Configure landing page
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: 'environment.yaml', dest: '/opt/flight/opt/www/landing-page/default/content/data/environment.yaml' }
+
+- name: Start web suite
+  command: "/opt/flight/bin/flight web-suite start"
+
+- name: Enable web suite
+  command: "/opt/flight/bin/flight web-suite enable"
+

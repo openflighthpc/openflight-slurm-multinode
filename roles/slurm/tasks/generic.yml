@@ -1,0 +1,94 @@
+- name: Check for local munge key file
+  stat:
+    path: "files/{{ cluster_name }}_munge.key"
+  register: munge_key_exists
+  delegate_to: localhost
+  run_once: true
+
+- name: Generate munge key
+  shell: "base64 /dev/urandom |tr -dc 'a-zA-Z0-9' |head -c 32"
+  register: munge_key
+  run_once: true
+  delegate_to: localhost
+  when: not munge_key_exists.stat.exists
+
+- name: Write local munge key file
+  copy:
+    content: "{{ munge_key.stdout }}"
+    dest: "files/{{ cluster_name }}_munge.key"
+  run_once: true
+  delegate_to: localhost
+  when: not munge_key_exists.stat.exists
+
+- name: Add munge key
+  copy:
+    src: "files/{{ cluster_name }}_munge.key"
+    dest: /etc/munge/munge.key
+    owner: munge
+    mode: 0400
+  tags:
+    - update
+
+- name: Turn on munge
+  service: name=munge state=restarted enabled=yes
+  tags:
+    - update
+
+- name: Create SLURM log dirs
+  file:
+    path: /opt/flight/opt/slurm/var/log/slurm
+    state: directory
+    owner: nobody
+
+- name: Create SLURM run directory
+  file:
+    path: /opt/flight/opt/slurm/var/run
+    state: directory
+    owner: nobody
+
+- name: Check for provided slurm.conf
+  stat:
+    path: "files/{{ cluster_name }}_slurm.conf"
+  register: slurm_conf_exists
+  delegate_to: localhost
+  run_once: true
+  tags:
+    - update
+
+- name: Gather resource limits for compute nodes
+  shell: "/opt/flight/opt/slurm/sbin/slurmd -C |head -1"
+  args:
+    warn: no
+  register: result
+  when:
+    - "'nodes' in group_names"
+    - not slurm_conf_exists.stat.exists
+  tags:
+    - update
+
+- name: Combine vars
+  set_fact:
+    nodeinfo: "{{ groups.nodes | map('extract', hostvars, 'result') | map(attribute='stdout') |list }}"
+  run_once: yes
+  when:
+    - "'nodes' in group_names"
+    - not slurm_conf_exists.stat.exists
+  tags:
+    - update
+
+- name: Install provided slurm.conf
+  copy:
+    src: "files/{{ cluster_name }}_slurm.conf"
+    dest: /opt/flight/opt/slurm/etc/slurm.conf
+  tags:
+    - update
+
+- name: Install generated slurm.conf
+  template:
+    src: slurm.conf
+    dest: /opt/flight/opt/slurm/etc/slurm.conf
+  when:
+    - not slurm_conf_exists.stat.exists
+  tags:
+    - update
+

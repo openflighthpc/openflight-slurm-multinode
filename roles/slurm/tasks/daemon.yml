@@ -1,0 +1,11 @@
+- name: Create spool directory
+  file:
+    path: /opt/flight/opt/slurm/var/spool
+    state: directory
+    owner: nobody
+    group: nobody
+
+- name: Turn on SLURM exec daemon
+  service: name=flight-slurmd state=restarted enabled=yes
+  tags:
+    - update

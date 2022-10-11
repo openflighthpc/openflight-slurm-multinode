@@ -1,0 +1,30 @@
+- name: Set cluster name
+  command: "/opt/flight/bin/flight config set cluster.name {{ cluster_name }}"
+
+- name: Set Flight Desktop access host
+  lineinfile:
+    path: /opt/flight/opt/desktop/etc/config.yml
+    line: "access_host: {{ access_host }}"
+    create: yes
+
+- name: Locate flight-env directory
+  shell: "rpm -ql flight-env |grep 'bin/flenv' |sed 's,/bin/flenv,,g'"
+  register: env_dir
+
+- name: Create apps directory
+  file:
+    path: /opt/apps
+    state: directory
+    owner: root
+
+- name: Configure global software environment location
+  template: src=config.yml dest={{ env_dir['stdout'] }}/etc/config.yml
+
+- name: Configure Singularity environment to work for users
+  sysctl:
+    name: user.max_user_namespaces
+    value: '100'
+    sysctl_set: yes
+    state: present
+    reload: yes
+

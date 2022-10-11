@@ -1,0 +1,4 @@
+{{ head_node }}  head,all
+{% if compute_nodes is defined %}
+{{ compute_nodes }} nodes,all
+{% endif %}

@@ -80,6 +80,8 @@
   copy:
     src: "files/{{ cluster_name }}_slurm.conf"
     dest: /opt/flight/opt/slurm/etc/slurm.conf
+  when: 
+    - slurm_conf_exists.stat.exists
   tags:
     - update
 

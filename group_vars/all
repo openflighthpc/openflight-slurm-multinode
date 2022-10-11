@@ -1,0 +1,58 @@
+# General
+cluster_name: mycluster
+
+## The hostname of the login node, this will become the NFS Server and SLURM
+## Controller. Must be reachable from compute hosts.
+login_node: ""
+
+# Shared User
+default_username: flight
+default_user_password: '0penfl1ght'
+
+# FlightEnv Settings
+
+## The hostname or IP address for accessing Web Suite and VNC sessions on
+access_host: ""
+
+## If True this will attempt to generate a Let's Encrypt certificate for Web Suite
+## and fall back to a self-signed one if the Let's Encrypt service cannot reach
+## the provided access_host address
+generate_certs: true
+
+# NFS Settings
+
+## IP range for NFS exports
+compute_ip_range: "10.10.0.0/16"
+
+nfs_shares:
+  apps:
+    server: "{{ login_node }}"
+    export: "{{ storage_path + '/apps' }}"
+    mountpoint: /opt/apps
+    export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
+    mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
+  data:
+    server: "{{ login_node }}"
+    export: "{{ storage_path + '/data' }}"
+    mountpoint: /opt/data
+    export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
+    mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
+  service:
+    server: "{{ login_node }}"
+    export: "{{ storage_path + '/service' }}"
+    mountpoint: /opt/service
+    export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
+    mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
+  site:
+    server: "{{ login_node }}"
+    export: "{{ storage_path + '/site' }}"
+    mountpoint: /opt/site
+    export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
+    mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
+  home:
+    server: "{{ login_node }}"
+    export: /home
+    mountpoint: /home
+    export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
+    mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
+

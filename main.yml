@@ -1,0 +1,11 @@
+- name: Configure Multi Node Research Environment
+  hosts: all
+  remote_user: root
+  gather_facts: True
+  roles:
+    - slurm
+    - nfs
+    - flightenv
+    - role: flightweb
+      when: "'login' in group_names"
+    - user

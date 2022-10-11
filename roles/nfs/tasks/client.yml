@@ -1,0 +1,7 @@
+- name: Create fstab file
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ item.value.server }}:{{ item.value.export }}    {{ item.value.mountpoint }}    nfs    {{ item.value.mount_opts }}    0 0"
+    state: present
+  with_dict: "{{ nfs_shares }}"
+

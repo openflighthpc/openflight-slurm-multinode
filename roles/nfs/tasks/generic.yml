@@ -1,0 +1,11 @@
+- name: Create mount directories
+  file:
+    path: "{{ item.value.mountpoint }}"
+    state: directory
+    mode: 0775
+  with_dict: "{{ nfs_shares }}"
+
+- name: Mount NFS exports
+  command: mount -a
+  args:
+    warn: no

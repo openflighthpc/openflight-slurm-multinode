@@ -1,0 +1,22 @@
+- name: Create export directories
+  file:
+    path: "{{ item.value.export }}"
+    state: directory
+    mode: 0775
+  with_dict: "{{ nfs_shares }}"
+
+- name: Create export file
+  template: src=exports dest=/etc/exports
+
+- name: Create fstab file
+  lineinfile:
+    path: /etc/fstab
+    line: "{% if item.value.export != item.value.mountpoint %}{{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0{% endif %}"
+    state: present
+  with_dict: "{{ nfs_shares }}"
+
+- name: Start NFS server service
+  service: "name=nfs-server state=started enabled=yes"
+
+- name: Export mounts
+  command: exportfs -va

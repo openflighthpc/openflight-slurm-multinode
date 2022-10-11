@@ -68,11 +68,18 @@
 
 - name: Combine vars
   set_fact:
-    nodeinfo: "{{ groups.nodes | map('extract', hostvars, 'result') | map(attribute='stdout') |list }}"
-  run_once: yes
+    nodeinfo: "{{ groups.compute | map('extract', hostvars, 'result') | map(attribute='stdout') |list }}"
   when:
-    - "'compute' in group_names"
+    - "'compute' in groups"
     - not slurm_conf_exists.stat.exists
+  tags:
+    - update
+
+- name: Sanitise node info
+  set_fact:
+    nodeinfo: ['Nodename=localhost']
+  when:
+    - (nodeinfo is undefined or nodeinfo | type_debug == 'str')
   tags:
     - update
 

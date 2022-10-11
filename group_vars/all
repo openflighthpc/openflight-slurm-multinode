@@ -27,25 +27,25 @@ compute_ip_range: "10.10.0.0/16"
 nfs_shares:
   apps:
     server: "{{ login_node }}"
-    export: "{{ storage_path + '/apps' }}"
+    export: "/export//apps"
     mountpoint: /opt/apps
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
   data:
     server: "{{ login_node }}"
-    export: "{{ storage_path + '/data' }}"
+    export: "/export/data"
     mountpoint: /opt/data
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
   service:
     server: "{{ login_node }}"
-    export: "{{ storage_path + '/service' }}"
+    export: "/export/service"
     mountpoint: /opt/service
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
   site:
     server: "{{ login_node }}"
-    export: "{{ storage_path + '/site' }}"
+    export: "/export/site"
     mountpoint: /opt/site
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail

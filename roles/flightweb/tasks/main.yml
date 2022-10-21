@@ -1,16 +1,10 @@
 - name: Generate Let's Encrypt certificate
   command: "/opt/flight/bin/flight www cert-gen --cert-type lets-encrypt --domain {{ access_host }} --email certs@openflighthpc.org"
   register: letsencryptout
-  failed_when: "letsencryptout.rc < 0"
+  failed_when: "letsencryptout.rc > 0"
+  ignore_errors: true
   when:
     - "generate_certs"
-
-- name: Certificate Debug Update
-  debug:
-    msg: "Let's Encrypt certificate generation failed, will attempt self-signed" 
-  when:
-    - "generate_certs"
-    - "letsencryptout.rc != 0"
 
 - name: Generate Self-Signed certificate 
   command: "/opt/flight/bin/flight www cert-gen --cert-type self-signed --domain {{ access_host }}"

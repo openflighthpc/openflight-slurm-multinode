@@ -4,12 +4,12 @@
   failed_when: "letsencryptout.rc > 0"
   ignore_errors: true
   when:
-    - "generate_certs"
+    - "generate_certs | bool"
 
 - name: Generate Self-Signed certificate 
   command: "/opt/flight/bin/flight www cert-gen --cert-type self-signed --domain {{ access_host }}"
   when:
-    - "generate_certs"
+    - "generate_certs | bool"
     - "letsencryptout.rc != 0"
 
 - name: Configure web suite domain

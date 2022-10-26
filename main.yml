@@ -3,6 +3,8 @@
   remote_user: root
   gather_facts: True
   roles:
+    - role: hosts
+      when: use_hunter 
     - slurm
     - nfs
     - flightenv

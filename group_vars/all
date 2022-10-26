@@ -19,6 +19,10 @@ access_host: ""
 ## the provided access_host address
 generate_certs: true
 
+## If true this will generate host entries from the information stored in flight-hunter
+## such that hunter labels will resolve to the correct hosts
+use_hunter: true
+
 # NFS Settings
 
 ## IP range for NFS exports

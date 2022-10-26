@@ -1,0 +1,25 @@
+- name: Identify hunter nodes
+  shell: flight hunter list --plain
+  register: hunter_list
+  delegate_to: localhost
+  tags:
+    - update
+
+- name: Process hunter nodes
+  set_fact:
+    hunter_nodes: "{{ hunter_nodes | default([]) + [ item.split('\t') ] }}"
+  loop: "{{ hunter_list.stdout_lines }}"
+  delegate_to: localhost
+  tags:
+    - update
+
+- name: Add hunter nodes to /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} FLIGHT HUNTER HOSTS ENTRIES - DO NOT TOUCH"
+    block: |
+      {% for item in hunter_nodes %}
+      {{ item.2 }}    {{ item.1 }} {{ item.4 }}
+      {% endfor %}
+  tags:
+    - update

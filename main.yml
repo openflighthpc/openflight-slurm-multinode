@@ -4,7 +4,7 @@
   gather_facts: True
   roles:
     - role: hosts
-      when: use_hunter 
+      when: hunter_hosts
     - slurm
     - nfs
     - flightenv

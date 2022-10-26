@@ -1,5 +1,5 @@
 - name: Identify hunter nodes
-  shell: flight hunter list --plain
+  command: /opt/flight/bin/flight hunter list --plain
   register: hunter_list
   delegate_to: localhost
   tags:

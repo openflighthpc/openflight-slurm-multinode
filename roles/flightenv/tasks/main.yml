@@ -20,11 +20,3 @@
 - name: Configure global software environment location
   template: src=config.yml dest={{ env_dir['stdout'] }}/etc/config.yml
 
-- name: Configure Singularity environment to work for users
-  sysctl:
-    name: user.max_user_namespaces
-    value: '100'
-    sysctl_set: yes
-    state: present
-    reload: yes
-

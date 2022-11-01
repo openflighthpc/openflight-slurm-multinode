@@ -23,3 +23,21 @@
       {% endfor %}
   tags:
     - update
+
+- name: Collect hunter mac addresses
+  shell: "{% for item in hunter_nodes %} sudo -i /opt/flight/bin/flight hunter show {{ item.4 }} |grep '{{ item.2 }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g' {%endfor %}"
+  register: hunter_macs
+  delegate_to: localhost
+  tags:
+    - update
+
+- name: Add hunter node mac addresses to firewall
+  firewalld:
+    zone: trusted
+    source: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  loop: "{{ hunter_macs.stdout_lines }}"
+  tags:
+    - update

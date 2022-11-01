@@ -1,4 +1,4 @@
-{{ login_node }}  head,all
-{% if compute_nodes is defined %}
-{{ compute_nodes }} nodes,all
+{{ groups.login |join(',') | default ('') }}  head,all
+{% if 'compute' in groups %}
+{{ groups.compute | join(',') | default('') }} nodes,all
 {% endif %}

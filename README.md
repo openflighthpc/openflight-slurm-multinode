@@ -18,7 +18,8 @@ This playbook _configures_ the services within it, it does not perform any insta
 - Clone repository
 - Set variables
     - `cluster_name`: The name for this cluster to go by, it will appear in the command prompt and web suite
-    - `login_node`: The hostname or IP of the login node, this will become the SLURM and NFS server
+    - `nfs_server`: The hostname or IP of the NFS server 
+    - `slurm_server`: The hostname or IP of the SLURM controller
     - `default_username`: The default user on the system (e.g. on a Flight Solo image this will be `flight`) 
     - `default_password`: The password to set for this user to enable access to Flight Web Suite (defaults to `0penfl1ght`)
     - `access_host`: The hostname or IP address that this system can be reached on, used for both Web Suite and Desktop sessions

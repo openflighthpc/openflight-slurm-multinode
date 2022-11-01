@@ -3,7 +3,7 @@
   remote_user: root
   gather_facts: True
   roles:
-    - role: hosts
+    - role: hunter
       when: hunter_hosts |bool
     - slurm
     - nfs

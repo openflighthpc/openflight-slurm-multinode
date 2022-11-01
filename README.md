@@ -24,6 +24,7 @@ This playbook _configures_ the services within it, it does not perform any insta
     - `access_host`: The hostname or IP address that this system can be reached on, used for both Web Suite and Desktop sessions
     - `generate_certs`: Whether the playbook should attempt to generate SSL certs for the Web Suite (initially attempting a Let's Encrypt certificate and falling back to a self-signed if Let's Encrypt isn't able to reach the provided `access_host`) 
     - `compute_ip_range`: The network range for NFS server exports to be shared with
+    - `hunter_hosts`: When set to true - this will make appropriate changes to `/etc/hosts` and system firewalls to trust hosts in [flight-hunter](https://github.com/openflighthpc/flight-hunter)
 - Create ansible inventory file (e.g. `mycluster.inv`) that looks like the following
   ```shell
   [login]

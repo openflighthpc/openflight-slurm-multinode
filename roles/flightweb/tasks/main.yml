@@ -1,3 +1,6 @@
+- name: Start Flight WWW
+  command: "/opt/flight/bin/flight service restart www"
+
 - name: Generate Let's Encrypt certificate
   command: "/opt/flight/bin/flight www cert-gen --cert-type lets-encrypt --domain {{ access_host }} --email certs@openflighthpc.org"
   register: letsencryptout

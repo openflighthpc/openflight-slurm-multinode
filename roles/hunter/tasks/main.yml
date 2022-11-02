@@ -1,0 +1,6 @@
+- name: Generic Hunter Tasks
+  import_tasks: generic.yml
+
+- name: Login Node Hunter Tasks
+  import_tasks: login.yml
+  when: "'login' in group_names"

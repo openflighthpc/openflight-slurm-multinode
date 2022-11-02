@@ -1,0 +1,39 @@
+- name: Generate temporary genders file
+  blockinfile:
+    path: /tmp/genders
+    create: yes
+    marker: "# {mark} FLIGHT HUNTER GENDERS ENTRIES - DO NOT TOUCH"
+    block: |
+     {% for item in hunter_nodes %}
+     {% if item.groups == "|" %}
+     {{ item.label }} all
+     {% else %}
+     {{ item.label }} {{ item.groups |replace('|', ',') }},all
+     {% endif %}
+     {% endfor %}
+  tags:
+    - update
+
+- name: Compress genders
+  command: "sudo -i nodeattr -f /tmp/genders --compress"
+  register: genders_compress
+  tags:
+    - update
+
+- name: Save genders to file
+  blockinfile:
+    path: /opt/flight/etc/genders
+    marker: "# {mark} FLIGHT HUNTER GENDERS ENTRIES - DO NOT TOUCH"
+    block: |
+       {% for line in genders_compress.stdout_lines %}
+       {{ line }}
+       {% endfor %}
+  tags:
+    - update
+
+- name: Remove temporary genders file
+  file:
+    state: absent
+    path: /tmp/genders
+  tags:
+    - update

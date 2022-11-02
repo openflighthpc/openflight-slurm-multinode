@@ -51,7 +51,7 @@
       if [ "$PS1" ]; then
       {% for item in hunter_nodes %}
       {% if item.fqdn == inventory_hostname %}
-          PS1="[\u@\h\[\e[1;34m\] ({{ item.label }})\[\e[0m\] \W]\\$ "
+          PS1="[\u@\h\[\e[1;34m\] [{{ item.label }}]\[\e[0m\] \W]\\$ "
       {% endif %}
       {% endfor %}
       fi

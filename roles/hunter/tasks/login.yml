@@ -8,7 +8,7 @@
      {% if item.groups == "|" %}
      {{ item.label }} all
      {% else %}
-     {{ item.label }} {{ item.groups |replace('|', ',') }},all
+     {{ item.label }} {{ item.groups |replace('|', ',') }}
      {% endif %}
      {% endfor %}
   tags:

@@ -20,9 +20,3 @@
 - name: Configure global software environment location
   template: src=config.yml dest={{ env_dir['stdout'] }}/etc/config.yml
 
-- name: Install genders
-  template:
-    src: genders
-    dest: /opt/flight/etc/genders
-  tags:
-    - update

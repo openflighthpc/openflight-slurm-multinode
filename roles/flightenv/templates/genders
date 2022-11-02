@@ -1,4 +1,0 @@
-{{ groups.login |join(',') | default ('') }}  head,all
-{% if 'compute' in groups %}
-{{ groups.compute | join(',') | default('') }} nodes,all
-{% endif %}

@@ -41,3 +41,20 @@
   loop: "{{ hunter_macs.stdout_lines }}"
   tags:
     - update
+
+- name: Set hunter label in prompt 
+  blockinfile:
+    path: /etc/profile.d/01-hunter-prompt.sh
+    create: yes
+    marker: "# {mark} FLIGHT HUNTER PROMPT"
+    block: |
+      if [ "$PS1" ]; then
+      {% for item in hunter_nodes %}
+      {% if item.fqdn == inventory_hostname %}
+          PS1="[\u@\h\[\e[1;34m\] ({{ item.label }})\[\e[0m\] \W]\\$ "
+      {% endif %}
+      {% endfor %}
+      fi
+  tags:
+    - update
+

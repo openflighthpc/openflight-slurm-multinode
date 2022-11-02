@@ -19,7 +19,7 @@
     marker: "# {mark} FLIGHT HUNTER HOSTS ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in hunter_nodes %}
-      {{ item.ip }}    {{ item.fqdn }} {{ item.label }}
+      {{ item.ip }}    {{ item.fqdn }} {{ item.fqdn.split('.') |first }} {{ item.label }}
       {% endfor %}
   tags:
     - update

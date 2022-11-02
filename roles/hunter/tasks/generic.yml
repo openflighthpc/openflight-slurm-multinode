@@ -7,7 +7,7 @@
 
 - name: Process hunter nodes
   set_fact:
-    hunter_nodes: "{{ hunter_nodes | default([]) + [ item.split('\t') ] }}"
+    hunter_nodes: "{{ hunter_nodes | default([]) +  [ {'label' : item.split('\t').4, 'ip' : item.split('\t').2, 'fqdn': item.split('\t').1, 'groups': item.split('\t').3} ] }}"
   loop: "{{ hunter_list.stdout_lines }}"
   delegate_to: localhost
   tags:
@@ -19,13 +19,13 @@
     marker: "# {mark} FLIGHT HUNTER HOSTS ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in hunter_nodes %}
-      {{ item.2 }}    {{ item.1 }} {{ item.4 }}
+      {{ item.ip }}    {{ item.fqdn }} {{ item.label }}
       {% endfor %}
   tags:
     - update
 
 - name: Collect hunter mac addresses
-  shell: "{% for item in hunter_nodes %} sudo -i /opt/flight/bin/flight hunter show {{ item.4 }} |grep '{{ item.2 }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g' ;{%endfor %}"
+  shell: "{% for item in hunter_nodes %} sudo -i /opt/flight/bin/flight hunter show {{ item.label }} |grep '{{ item.ip }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g' ;{%endfor %}"
   register: hunter_macs
   delegate_to: localhost
   tags:

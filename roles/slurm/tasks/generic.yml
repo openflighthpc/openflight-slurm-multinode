@@ -68,7 +68,7 @@
 
 - name: Combine vars
   set_fact:
-    nodeinfo: "{{ groups.compute | map('extract', hostvars, 'result') | map(attribute='stdout') |list }}"
+    nodeinfo: "{{ groups.compute | map('extract', hostvars) |map(attribute='result', default={'stdout': False}) | map(attribute='stdout') |list |select() }}"
   when:
     - "'compute' in groups"
     - not slurm_conf_exists.stat.exists

@@ -3,6 +3,7 @@
   register: hunter_list
   delegate_to: localhost
   tags:
+    - pre
     - update
 
 - name: Process hunter nodes
@@ -11,6 +12,7 @@
   loop: "{{ hunter_list.stdout_lines }}"
   delegate_to: localhost
   tags:
+    - pre
     - update
 
 - name: Add hunter nodes to /etc/hosts
@@ -22,6 +24,7 @@
       {{ item.ip }}    {{ item.fqdn }} {{ item.fqdn.split('.') |first }} {{ item.label }}
       {% endfor %}
   tags:
+    - pre
     - update
 
 - name: Collect hunter mac addresses
@@ -29,6 +32,7 @@
   register: hunter_macs
   delegate_to: localhost
   tags:
+    - pre
     - update
 
 - name: Add hunter node mac addresses to firewall
@@ -40,6 +44,7 @@
     immediate: yes
   loop: "{{ hunter_macs.stdout_lines }}"
   tags:
+    - pre
     - update
 
 - name: Set hunter label in prompt 

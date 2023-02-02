@@ -12,13 +12,13 @@
      {% endif %}
      {% endfor %}
   tags:
-    - update
+    - pre
 
 - name: Compress genders
   command: "sudo -i nodeattr -f /tmp/genders --compress"
   register: genders_compress
   tags:
-    - update
+    - pre
 
 - name: Save genders to file
   blockinfile:
@@ -29,11 +29,11 @@
        {{ line }}
        {% endfor %}
   tags:
-    - update
+    - pre
 
 - name: Remove temporary genders file
   file:
     state: absent
     path: /tmp/genders
   tags:
-    - update
+    - pre

@@ -25,6 +25,9 @@
   loop:
     - { src: 'environment.yaml', dest: '/opt/flight/opt/www/landing-page/default/content/data/environment.yaml' }
 
+- name: Compile landing page
+  command: "/opt/flight/bin/flight landing-page compile"
+
 - name: Start web suite
   command: "/opt/flight/bin/flight web-suite start"
 

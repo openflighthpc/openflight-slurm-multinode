@@ -3,18 +3,10 @@
   register: hunter_show_remove
   delegate_to: localhost
 
-- name: Check identified
-  debug:
-    msg: "{{ hunter_show_remove }}"
-
 - name: Process node to be removed
   set_fact:
-    hunter_node_remove: "{{ hunter_show_remove.stdout_lines | default([]) +  [ {'label' : item.split('\t').4, 'ip' : item.split('\t').2, 'fqdn': item.split('\t').1, 'groups': item.split('\t').3} ] }}"
+    hunter_node_remove: {'label' : "{{ remove_node }}", 'ip' : "{{ hunter_show_remove.stdout_lines[0].split('\t').2 }}", 'fqdn': "{{ hunter_show_remove.stdout_lines[0].split('\t').1 }}", 'groups': "{{ hunter_show_remove.stdout_lines[0].split('\t').3}}" }
   delegate_to: localhost
-
-- name: Check processed
-  debug:
-    msg: "{{ hunter_node_remove }}"
 
 - name: Remove node from /etc/hosts
   lineinfile:
@@ -30,9 +22,10 @@
 - name: Remove node mac from firewall
   firewalld:
     zone: trusted
-    source: "{{ hunter_node_remove_mac.stdout_lines }}"
+    source: "{{ hunter_node_remove_mac.stdout_lines[0] }}"
     state: disabled
     permanent: yes
+  register: output
   retries: 10
   delay: 1
   until: output is not failed
@@ -43,7 +36,12 @@
     source: "{{ hunter_node_remove.ip }}"
     state: disabled
     permanent: yes
+  register: output
   retries: 10
   delay: 1
   until: output is not failed
 
+- name: Reload firewall
+  systemd:
+    name: firewalld
+    state: reloaded

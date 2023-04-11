@@ -1,0 +1,6 @@
+- name: Configure Multi Node Research Environment
+  hosts: all
+  remote_user: root
+  gather_facts: True
+  roles:
+    - remove

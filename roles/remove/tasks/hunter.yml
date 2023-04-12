@@ -1,11 +1,11 @@
 - name: Identify node to be removed
-  command: "sudo -i /opt/flight/bin/flight hunter show {{ remove_node }} --plain"
+  shell: "sudo -i /opt/flight/bin/flight hunter list --plain |grep {{ remove_node }}"
   register: hunter_show_remove
   delegate_to: localhost
 
 - name: Process node to be removed
   set_fact:
-    hunter_node_remove: {'label' : "{{ remove_node }}", 'ip' : "{{ hunter_show_remove.stdout_lines[0].split('\t').2 }}", 'fqdn': "{{ hunter_show_remove.stdout_lines[0].split('\t').1 }}", 'groups': "{{ hunter_show_remove.stdout_lines[0].split('\t').3}}" }
+    hunter_node_remove: {'label' : "{{ hunter_show_remove.stdout_lines[0].split('\t').4 }}", 'ip' : "{{ hunter_show_remove.stdout_lines[0].split('\t').2 }}", 'fqdn': "{{ remove_node }}", 'groups': "{{ hunter_show_remove.stdout_lines[0].split('\t').3}}" }
   delegate_to: localhost
 
 - name: Remove node from /etc/hosts

@@ -1,9 +1,3 @@
-- name: SLURM Removal 
-  import_tasks: slurm.yml
-  tags:
-    - never
-    - remove
-
 - name: Hunter Removal
   import_tasks: hunter.yml
   tags:

@@ -1,0 +1,47 @@
+- name: Identify node to be removed
+  shell: "sudo -i /opt/flight/bin/flight hunter list --plain |grep {{ remove_node }}"
+  register: hunter_show_remove
+  delegate_to: localhost
+
+- name: Process node to be removed
+  set_fact:
+    hunter_node_remove: {'label' : "{{ hunter_show_remove.stdout_lines[0].split('\t').4 }}", 'ip' : "{{ hunter_show_remove.stdout_lines[0].split('\t').2 }}", 'fqdn': "{{ remove_node }}", 'groups': "{{ hunter_show_remove.stdout_lines[0].split('\t').3}}" }
+  delegate_to: localhost
+
+- name: Remove node from /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    line: "{{ hunter_node_remove.ip }}    {{ hunter_node_remove.fqdn }} {{ hunter_node_remove.fqdn.split('.') |first }} {{ hunter_node_remove.label }}"
+
+- name: Identify remove node mac address
+  shell: "sudo -i /opt/flight/bin/flight hunter show {{ hunter_node_remove.label }} |grep '{{ hunter_node_remove.ip }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g'"
+  register: hunter_node_remove_mac
+  delegate_to: localhost
+
+- name: Remove node mac from firewall
+  firewalld:
+    zone: trusted
+    source: "{{ hunter_node_remove_mac.stdout_lines[0] }}"
+    state: disabled
+    permanent: yes
+  register: output
+  retries: 10
+  delay: 1
+  until: output is not failed
+
+- name: Remove node ip from firewall
+  firewalld:
+    zone: trusted
+    source: "{{ hunter_node_remove.ip }}"
+    state: disabled
+    permanent: yes
+  register: output
+  retries: 10
+  delay: 1
+  until: output is not failed
+
+- name: Reload firewall
+  systemd:
+    name: firewalld
+    state: reloaded

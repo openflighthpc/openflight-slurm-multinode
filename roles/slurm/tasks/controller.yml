@@ -9,3 +9,4 @@
   service: name=flight-slurmctld state=restarted enabled=yes
   tags:
     - update
+    - remove

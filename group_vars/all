@@ -63,3 +63,8 @@ nfs_shares:
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
 
+
+# Remove
+
+## Node to remove
+remove_node: "HOSTNAME_OF_NODE_TO_BE_REMOVED" 

@@ -54,6 +54,7 @@
   run_once: true
   tags:
     - update
+    - remove
 
 - name: Gather resource limits for compute nodes
   shell: "/opt/flight/opt/slurm/sbin/slurmd -C |head -1"
@@ -63,17 +64,21 @@
   when:
     - "'compute' in group_names"
     - not slurm_conf_exists.stat.exists
+    - remove_node != ansible_fqdn
   tags:
     - update
+    - remove
 
 - name: Combine vars
   set_fact:
-    nodeinfo: "{{ groups.compute | map('extract', hostvars) |map(attribute='result', default={'stdout': False}) | map(attribute='stdout') |list |select() }}"
+    nodeinfo: "{{ groups.compute | reject('equalto', remove_node) | map('extract', hostvars) |map(attribute='result', default={'stdout': False}) | map(attribute='stdout') |list |select() }}"
   when:
     - "'compute' in groups"
     - not slurm_conf_exists.stat.exists
+    - remove_node != ansible_fqdn
   tags:
     - update
+    - remove
 
 - name: Sanitise node info
   set_fact:
@@ -82,6 +87,7 @@
     - (nodeinfo is undefined or nodeinfo | type_debug == 'str')
   tags:
     - update
+    - remove
 
 - name: Install provided slurm.conf
   copy:
@@ -91,6 +97,7 @@
     - slurm_conf_exists.stat.exists
   tags:
     - update
+    - remove
 
 - name: Install generated slurm.conf
   template:
@@ -100,4 +107,5 @@
     - not slurm_conf_exists.stat.exists
   tags:
     - update
+    - remove
 

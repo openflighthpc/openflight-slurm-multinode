@@ -7,6 +7,9 @@ nfs_server: ""
 ## The hostname of the SLURM controller
 slurm_server: ""
 
+## Whether or not to do MAC-based firewall trusting
+mac_firewall: false
+
 # Shared User
 default_username: flight
 default_user_password: '0penfl1ght'

@@ -28,6 +28,8 @@
   shell: "{% for item in hunter_nodes %} sudo -i /opt/flight/bin/flight hunter show {{ item.label }} |grep '{{ item.ip }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g' ;{%endfor %}"
   register: hunter_macs
   delegate_to: localhost
+  when:
+    - mac_firewall
   tags:
     - pre
 
@@ -49,6 +51,8 @@
   retries: 10
   delay: 1
   until: output is not failed
+  when:
+    - mac_firewall
   tags:
     - pre
 

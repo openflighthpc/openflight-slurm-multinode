@@ -18,6 +18,8 @@
   shell: "sudo -i /opt/flight/bin/flight hunter show {{ hunter_node_remove.label }} |grep '{{ hunter_node_remove.ip }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g'"
   register: hunter_node_remove_mac
   delegate_to: localhost
+  when:
+    - mac_firewall
 
 - name: Remove node mac from firewall
   firewalld:
@@ -29,6 +31,8 @@
   retries: 10
   delay: 1
   until: output is not failed
+  when:
+    - mac_firewall
 
 - name: Remove node ip from firewall
   firewalld:

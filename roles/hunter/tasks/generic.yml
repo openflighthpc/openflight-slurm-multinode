@@ -37,14 +37,6 @@
     - pre
     - never
 
-- name: Collect hunter IP addresses
-  shell: "sudo -i /opt/flight/bin/flight hunter list --plain  |awk '{print $3}'"
-  register: hunter_ips
-  delegate_to: localhost
-  tags:
-    - pre
-    - never
-
 - name: Add hunter node mac addresses to firewall
   firewalld:
     zone: trusted
@@ -65,10 +57,10 @@
 - name: Add hunter node IP addresses to firewall
   firewalld:
     zone: trusted
-    source: "{{ item }}"
+    source: "{{ item.ip }}"
     state: enabled
     permanent: yes
-  loop: "{{ hunter_ips.stdout_lines }}"
+  loop: "{{ hunter_nodes }}"
   register: ip_out
   retries: 10
   delay: 1

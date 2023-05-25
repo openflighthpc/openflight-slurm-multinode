@@ -49,3 +49,5 @@
   systemd:
     name: firewalld
     state: reloaded
+  when:
+    - remove_node != ansible_fqdn

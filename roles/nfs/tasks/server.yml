@@ -6,14 +6,24 @@
   with_dict: "{{ nfs_shares }}"
 
 - name: Create export file
-  template: src=exports dest=/etc/exports
+  blockinfile:
+    path: /etc/exports
+    marker: "# {mark} FLIGHT EXPORT ENTRIES - DO NOT TOUCH"
+    block: |
+      {% for item in nfs_shares|dict2items %}
+      {{ item.value.export }} {{ item.value.export_opts }}
+      {% endfor %}
+    state: present
 
 - name: Create fstab file
-  lineinfile:
+  blockinfile:
     path: /etc/fstab
-    line: "{% if item.value.export != item.value.mountpoint %}{{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0{% endif %}"
+    marker: "# {mark} FLIGHT NFS ENTRIES - DO NOT TOUCH"
+    block: |
+      {% for item in nfs_shares|dict2items %}
+      {% if item.value.export != item.value.mountpoint %}{{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0{% endif %}
+      {% endfor %}
     state: present
-  with_dict: "{{ nfs_shares }}"
 
 - name: Start NFS server service
   service: "name=nfs-server state=started enabled=yes"

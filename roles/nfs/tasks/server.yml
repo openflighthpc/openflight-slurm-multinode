@@ -21,7 +21,9 @@
     marker: "# {mark} FLIGHT NFS ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in nfs_shares|dict2items %}
-      {% if item.value.export != item.value.mountpoint %}{{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0{% endif %}
+      {% if item.value.export != item.value.mountpoint %}
+      {{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0
+      {% endif %}
       {% endfor %}
     state: present
 

@@ -58,8 +58,6 @@
 
 - name: Gather resource limits for compute nodes
   shell: "/opt/flight/opt/slurm/sbin/slurmd -C |head -1"
-  args:
-    warn: no
   register: result
   when:
     - "'compute' in group_names"

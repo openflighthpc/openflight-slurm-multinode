@@ -7,7 +7,5 @@
 
 - name: Mount NFS exports
   command: mount -a
-  args:
-    warn: no
   tags:
     - update

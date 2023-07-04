@@ -8,7 +8,7 @@
 - name: Turn on SLURM exec daemon
   service: name=flight-slurmd state=restarted enabled=yes
   when:
-    - remove_node != ansible_fqdn
+    - not ansible_fqdn in remove_node
   tags:
     - update
     - remove

@@ -62,18 +62,18 @@
   when:
     - "'compute' in group_names"
     - not slurm_conf_exists.stat.exists
-    - remove_node != ansible_fqdn
+    - not ansible_fqdn in remove_node
   tags:
     - update
     - remove
 
 - name: Combine vars
   set_fact:
-    nodeinfo: "{{ groups.compute | reject('equalto', remove_node) | map('extract', hostvars) |map(attribute='result', default={'stdout': False}) | map(attribute='stdout') |list |select() }}"
+    nodeinfo: "{{ groups.compute | reject('match', '(' + remove_node  | join('|') + ')') | map('extract', hostvars) |map(attribute='result', default={'stdout': False}) | map(attribute='stdout') |list |select() }}"
   when:
     - "'compute' in groups"
     - not slurm_conf_exists.stat.exists
-    - remove_node != ansible_fqdn
+    - not ansible_fqdn in remove_node
   tags:
     - update
     - remove

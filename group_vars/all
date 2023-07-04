@@ -70,4 +70,6 @@ nfs_shares:
 # Remove
 
 ## Node to remove
-remove_node: "HOSTNAME_OF_NODE_TO_BE_REMOVED" 
+remove_node:
+  - "HOSTNAME_OF_NODE_TO_BE_REMOVED" 
+  - "HOSTNAME_OF_NODE_TO_BE_REMOVED2" 

@@ -6,7 +6,7 @@
 
 - name: Process node to be removed
   set_fact:
-    hunter_node_remove: "{{ hunter_node_remove | default([]) + [{'label' : hunter_show_remove.stdout_lines[0].split('\t').4, 'ip' : hunter_show_remove.stdout_lines[0].split('\t').2, 'fqdn': item.stdout_lines[0].split('\t').1, 'groups': hunter_show_remove.stdout_lines[0].split('\t').3 }] }}"
+    hunter_node_remove: "{{ hunter_node_remove | default([]) + [{'label' : item.stdout_lines[0].split('\t').4, 'ip' : item.stdout_lines[0].split('\t').2, 'fqdn': item.stdout_lines[0].split('\t').1, 'groups': item.stdout_lines[0].split('\t').3 }] }}"
   delegate_to: localhost
   loop: "{{ hunter_show_remove.results }}"
 

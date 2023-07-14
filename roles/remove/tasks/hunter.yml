@@ -56,4 +56,4 @@
     name: firewalld
     state: reloaded
   when:
-    - remove_node != ansible_fqdn
+    - not ansible_fqdn in remove_node

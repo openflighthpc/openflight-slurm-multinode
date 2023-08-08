@@ -1,53 +1,59 @@
 - name: Identify node to be removed
-  shell: "sudo -i /opt/flight/bin/flight hunter list --plain |grep {{ remove_node }}"
+  shell: "sudo -i /opt/flight/bin/flight hunter list --plain |grep {{ item }}"
   register: hunter_show_remove
   delegate_to: localhost
+  loop: "{{ remove_node }}"
 
 - name: Process node to be removed
   set_fact:
-    hunter_node_remove: {'label' : "{{ hunter_show_remove.stdout_lines[0].split('\t').4 }}", 'ip' : "{{ hunter_show_remove.stdout_lines[0].split('\t').2 }}", 'fqdn': "{{ remove_node }}", 'groups': "{{ hunter_show_remove.stdout_lines[0].split('\t').3}}" }
+    hunter_node_remove: "{{ hunter_node_remove | default([]) + [{'label' : item.stdout_lines[0].split('\t').4, 'ip' : item.stdout_lines[0].split('\t').2, 'fqdn': item.stdout_lines[0].split('\t').1, 'groups': item.stdout_lines[0].split('\t').3 }] }}"
   delegate_to: localhost
+  loop: "{{ hunter_show_remove.results }}"
 
 - name: Remove node from /etc/hosts
   lineinfile:
     path: /etc/hosts
     state: absent
-    line: "{{ hunter_node_remove.ip }}    {{ hunter_node_remove.fqdn }} {{ hunter_node_remove.fqdn.split('.') |first }} {{ hunter_node_remove.label }}"
+    line: "{{ item.ip }}    {{ item.fqdn }} {{ item.fqdn.split('.') |first }} {{ item.label }}"
+  loop: "{{ hunter_node_remove }}"
 
 - name: Identify remove node mac address
-  shell: "sudo -i /opt/flight/bin/flight hunter show {{ hunter_node_remove.label }} |grep '{{ hunter_node_remove.ip }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g'"
+  shell: "sudo -i /opt/flight/bin/flight hunter show {{ item.label }} |grep '{{ item.ip }}' -B 2  |grep ':mac:' |sed 's/.*:mac: //g'"
   register: hunter_node_remove_mac
   delegate_to: localhost
+  loop: "{{ hunter_node_remove }}"
   when:
     - mac_firewall
 
 - name: Remove node mac from firewall
   firewalld:
     zone: trusted
-    source: "{{ hunter_node_remove_mac.stdout_lines[0] }}"
+    source: "{{ item.stdout_lines[0] }}"
     state: disabled
     permanent: yes
   register: output
   retries: 10
   delay: 1
   until: output is not failed
+  loop: "{{ hunter_node_remove_mac.results }}"
   when:
     - mac_firewall
 
 - name: Remove node ip from firewall
   firewalld:
     zone: trusted
-    source: "{{ hunter_node_remove.ip }}"
+    source: "{{ item.ip }}"
     state: disabled
     permanent: yes
   register: output
   retries: 10
   delay: 1
   until: output is not failed
+  loop: "{{ hunter_node_remove }}"
 
 - name: Reload firewall
   systemd:
     name: firewalld
     state: reloaded
   when:
-    - remove_node != ansible_fqdn
+    - not ansible_fqdn in remove_node

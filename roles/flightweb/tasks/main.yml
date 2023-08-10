@@ -34,3 +34,14 @@
 - name: Enable web suite
   command: "/opt/flight/bin/flight web-suite enable"
 
+- name: Check for Flight Profile API
+  package_facts:
+    manager: auto
+
+- name: Start Flight Profile API
+  command: "/opt/flight/bin/flight service start profile-api"
+  when: '"flight-profile-api" in ansible_facts.packages'
+
+- name: Enable Flight Profile API
+  command: "/opt/flight/bin/flight service enable profile-api"
+  when: '"flight-profile-api" in ansible_facts.packages'

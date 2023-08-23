@@ -29,7 +29,7 @@
   command: "/opt/flight/bin/flight landing-page compile"
 
 - name: Start web suite
-  command: "/opt/flight/bin/flight web-suite start"
+  command: "/opt/flight/bin/flight web-suite restart"
 
 - name: Enable web suite
   command: "/opt/flight/bin/flight web-suite enable"

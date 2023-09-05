@@ -31,3 +31,7 @@
   loop: "{{ ipahostadd.results }}"
   when:
     - "item.host.fqdn[0] != ipa_fqdn"
+  tags: 
+    - never
+    - pre
+    - update

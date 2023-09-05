@@ -1,13 +1,25 @@
 - name: Check password
   set_fact:
     insecure_admin_password: "{{ hostvars[groups['ipa'].0].ipaclientpasswords[ansible_fqdn] }}"
+  tags:
+    - never
+    - pre
+    - post
 
 - name: Client already enrolled in IPA?
   stat:
     path: "/etc/ipa/default.conf"
   register: ipa_conf
+  tags:
+    - never
+    - pre
+    - post
 
 - name: Join IPA
   command: "ipa-client-install --no-ntp --mkhomedir --ssh-trust-dns --force-join --realm={{ ansible_facts['nodename'].split('.')[1:] |join('.') |upper }} --server={{ ipa_fqdn }} -w {{ insecure_admin_password }} --domain {{ ansible_facts['nodename'].split('.')[1:] |join('.') }} --unattended --hostname={{ ansible_fqdn }}"
   when:
     - not ipa_conf.stat.exists
+  tags:
+    - never
+    - pre
+    - post

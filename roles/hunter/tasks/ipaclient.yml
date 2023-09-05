@@ -1,4 +1,4 @@
-- name: Check password
+- name: Identify IPA enrollment password
   set_fact:
     insecure_admin_password: "{{ hostvars[groups['ipa'].0].ipaclientpasswords[ansible_fqdn] }}"
   tags:

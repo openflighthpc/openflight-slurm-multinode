@@ -11,7 +11,7 @@
   ipa_host:
     name: "{{ item.fqdn }}"
     ip_address: "{{ item.ip }}"
-    ipa_host: "{{ identity_fqdn }}"
+    ipa_host: "{{ ipa_fqdn }}"
     ipa_user: admin
     ipa_pass: "{{ secure_admin_password }}"
     random_password: true

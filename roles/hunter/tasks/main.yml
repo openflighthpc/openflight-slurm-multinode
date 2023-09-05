@@ -3,11 +3,11 @@
 
 - name: IPA Server Hunter Tasks
   import_tasks: ipaserver.yml
-  when: "'identity' in group_names"
+  when: "'ipa' in group_names"
 
 - name: IPA Client Hunter Tasks
   import_tasks: ipaclient.yml
-  when: "'identity' not in group_names"
+  when: "'ipa' not in group_names"
 
 - name: Login Node Hunter Tasks
   import_tasks: login.yml

@@ -66,6 +66,9 @@ nfs_shares:
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
 
+# IPA Settings
+ipa_fqdn: "infra01.mycluster.cluster.local"
+secure_admin_password: MySecurePassword
 
 # Remove
 

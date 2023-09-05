@@ -30,6 +30,7 @@
     ipaclientpasswords: "{{ ipaclientpasswords | default({}) |combine({ item.host.fqdn[0] : item.host.randompassword }) }}"
   loop: "{{ ipahostadd.results }}"
   when:
+    - "ipastatus.rc == 0"
     - "item.host.fqdn[0] != ipa_fqdn"
   tags: 
     - never

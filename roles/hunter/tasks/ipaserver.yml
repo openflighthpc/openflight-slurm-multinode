@@ -1,0 +1,33 @@
+- name: IPA Ready for Client Additions?
+  shell: "ipactl status"
+  ignore_errors: true
+  register: ipastatus
+  tags: 
+    - never
+    - pre
+    - update
+
+- name: Add Hunter Hosts to IPA
+  ipa_host:
+    name: "{{ item.fqdn }}"
+    ip_address: "{{ item.ip }}"
+    ipa_host: "{{ identity_fqdn }}"
+    ipa_user: admin
+    ipa_pass: "{{ secure_admin_password }}"
+    random_password: true
+    state: present
+  loop: "{{ hunter_nodes }}"
+  when:
+    - "ipastatus.rc == 0"
+    - "item.fqdn != ipa_fqdn"
+  tags: 
+    - never
+    - pre
+    - update
+
+- name: Identify Client Join Passwords
+  set_fact:
+    ipaclientpasswords: "{{ ipaclientpasswords | default({}) |combine({ item.host.fqdn[0] : item.host.randompassword }) }}"
+  loop: "{{ ipahostadd.results }}"
+  when:
+    - "item.host.fqdn[0] != ipa_fqdn"

@@ -16,6 +16,7 @@
     ipa_pass: "{{ secure_admin_password }}"
     random_password: true
     state: present
+  register: ipahostadd
   loop: "{{ hunter_nodes }}"
   when:
     - "ipastatus.rc == 0"

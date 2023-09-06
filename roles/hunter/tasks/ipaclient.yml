@@ -1,13 +1,3 @@
-- name: Identify IPA enrollment password
-  set_fact:
-    insecure_admin_password: "{{ hostvars[groups['ipa'].0].ipaclientpasswords[ansible_fqdn] }}"
-  when:
-    - "hostvars[groups['ipa'].0].ipastatus.rc == 0"
-  tags:
-    - never
-    - pre
-    - update
-
 - name: Client already enrolled in IPA?
   stat:
     path: "/etc/ipa/default.conf"
@@ -18,7 +8,7 @@
     - update
 
 - name: Join IPA
-  command: "ipa-client-install --no-ntp --mkhomedir --ssh-trust-dns --force-join --realm={{ ansible_facts['nodename'].split('.')[1:] |join('.') |upper }} --server={{ ipa_fqdn }} -w {{ insecure_admin_password }} --domain {{ ansible_facts['nodename'].split('.')[1:] |join('.') }} --unattended --hostname={{ ansible_fqdn }}"
+  command: "ipa-client-install --no-ntp --mkhomedir --ssh-trust-dns --force-join --realm={{ ansible_facts['nodename'].split('.')[1:] |join('.') |upper }} --server={{ ipa_fqdn }} -p admin -w {{ secure_admin_password }} --domain {{ ansible_facts['nodename'].split('.')[1:] |join('.') }} --unattended --hostname={{ ansible_fqdn }}"
   when:
     - not ipa_conf.stat.exists
   tags:

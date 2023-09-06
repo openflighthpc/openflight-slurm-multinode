@@ -14,7 +14,6 @@
     ipa_host: "{{ ipa_fqdn }}"
     ipa_user: admin
     ipa_pass: "{{ secure_admin_password }}"
-    random_password: true
     state: present
   register: ipahostadd
   loop: "{{ hunter_nodes }}"
@@ -26,14 +25,3 @@
     - pre
     - update
 
-- name: Identify Client Join Passwords
-  set_fact:
-    ipaclientpasswords: "{{ ipaclientpasswords | default({}) |combine({ item.host.fqdn[0] : item.host.randompassword }) }}"
-  loop: "{{ ipahostadd.results }}"
-  when:
-    - "ipastatus.rc == 0"
-    - "item.item.fqdn != ipa_fqdn"
-  tags: 
-    - never
-    - pre
-    - update

@@ -63,9 +63,10 @@
   ipa_user:
     name: testuser
     state: present
-    givenname: Test User
+    givenname: Test
+    sn: User
     sshpubkey:
-      - "{{ testuser_sshkey }}"
+      - "{{ testuser_sshkey.public_key }}"
     ipa_pass: "{{ secure_admin_password }}"
 
 - name: Create Generic Cluster User Group

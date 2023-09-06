@@ -32,6 +32,7 @@
   delegate_to: localhost
   when:
     - "item.fqdn != ipa_fqdn"
+    - "ipastatus.rc == 0"
   tags: 
     - never
     - pre

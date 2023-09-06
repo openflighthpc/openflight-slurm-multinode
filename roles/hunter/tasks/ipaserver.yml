@@ -25,3 +25,28 @@
     - pre
     - update
 
+- name: Prepare Hunter Nodes List for Hostgroup Addition
+  set_fact:
+    hunter_fqdns: "{{ hunter_fqdns | default([]) + [item.fqdn] }}"
+  loop: "{{ hunter_nodes }}"
+  delegate_to: localhost
+  when:
+    - "item.fqdn != ipa_fqdn"
+  tags: 
+    - never
+    - pre
+    - update
+
+- name: Add Hunter Hosts to Generic Hostgroup
+  ipa_hostgroup:
+    name: cluster
+    host: "{{ hunter_fqdns }}"
+    append: true
+    ipa_pass: "{{ secure_admin_password }}"
+  when:
+    - "ipastatus.rc == 0"
+  tags: 
+    - never
+    - pre
+    - update
+

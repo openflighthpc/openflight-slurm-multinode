@@ -46,3 +46,42 @@
     name: allow_all
     state: disabled
     ipa_pass: "{{ secure_admin_password }}"
+
+- name: Create Generic Cluster Hostgroup
+  ipa_hostgroup: 
+    name: cluster
+    description: "All cluster hosts"
+    state: present
+    ipa_pass: "{{ secure_admin_password }}"
+
+- name: Add IPA Test User
+  ipa_user:
+    name: testuser
+    state: present
+    givenname: Test User
+    sshpubkey:
+      - "{{ root user ssh pub key alcescluster? }}"
+    ipa_pass: "{{ secure_admin_password }}"
+
+- name: Create Generic Cluster User Group
+  ipa_group: 
+    name: cluster-users
+    description: "Generic cluster users" 
+    state: present
+    ipa_pass: "{{ secure_admin_password }}" 
+    user:
+      - testuser
+    append: true
+
+- name: Configure Generic Cluster Access Rule
+  ipa_hbacrule:
+    name: cluster-access
+    description: "Allow user access to cluster hosts"
+    state: present
+    hostgroup:
+      - cluster
+    usergroup:
+      - cluster-users
+    service:
+      - sshd 
+    ipa_pass: "{{ secure_admin_password }}" 

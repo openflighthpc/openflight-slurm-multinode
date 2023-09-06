@@ -1,5 +1,5 @@
 - name: Hunter Removal
-  include_tasks: hunter.yml
+  import_tasks: hunter.yml
   tags:
     - never
     - remove

@@ -1,11 +1,11 @@
 - name: Perform Generic Configuration
-  import_tasks: generic.yml
+  include_tasks: generic.yml
   when: "'login' in group_names or 'compute' in group_names"
 
 - name: Perform Controller Configuration
-  import_tasks: controller.yml
+  include_tasks: controller.yml
   when: "'login' in group_names"
 
 - name: Perform Daemon Configuration
-  import_tasks: daemon.yml
+  include_tasks: daemon.yml
   when: "'compute' in group_names"

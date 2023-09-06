@@ -1,11 +1,11 @@
 - name: NFS Server Configuration
-  import_tasks: server.yml
+  include_tasks: server.yml
   when: "'login' in group_names"
 
 - name: NFS Client Configuration
-  import_tasks: client.yml
+  include_tasks: client.yml
   when: "'compute' in group_names" 
 
 - name: NFS Generic Configuration
-  import_tasks: generic.yml
+  include_tasks: generic.yml
 

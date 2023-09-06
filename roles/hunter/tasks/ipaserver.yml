@@ -32,7 +32,7 @@
   loop: "{{ ipahostadd.results }}"
   when:
     - "ipastatus.rc == 0"
-    - "item.host.fqdn[0] != ipa_fqdn"
+    - "item.item.fqdn != ipa_fqdn"
   tags: 
     - never
     - pre

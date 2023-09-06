@@ -54,13 +54,18 @@
     state: present
     ipa_pass: "{{ secure_admin_password }}"
 
+- name: Create SSH Pub Key for Test User
+  openssh_keypair:
+    path: /root/.ssh/id_testuser
+  register: testuser_sshkey
+
 - name: Add IPA Test User
   ipa_user:
     name: testuser
     state: present
     givenname: Test User
     sshpubkey:
-      - "{{ root user ssh pub key alcescluster? }}"
+      - "{{ testuser_sshkey }}"
     ipa_pass: "{{ secure_admin_password }}"
 
 - name: Create Generic Cluster User Group

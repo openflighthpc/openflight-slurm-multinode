@@ -44,7 +44,7 @@
 - name: Set HBAC rules
   ipa_hbacrule:
     name: allow_all
-    state: disabled
+    state: absent
     ipa_pass: "{{ secure_admin_password }}"
 
 - name: Create Generic Cluster Hostgroup

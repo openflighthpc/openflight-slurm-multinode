@@ -11,5 +11,7 @@
     - role: flightweb
       when: "'login' in group_names"
     - role: ipa
-      when: "'ipa' in group_names" 
+      when:
+        - "'ipa' in group_names" 
+        - ipa_use |bool
     - user

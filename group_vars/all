@@ -67,7 +67,11 @@ nfs_shares:
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
 
 # IPA Settings
+## If false then do not proceed to setup IPA server or client
+ipa_use: true
+## The FQDN of the system to setup as the IPA server
 ipa_fqdn: "infra01.mycluster.cluster.local"
+## Password for the 'admin' IPA user
 secure_admin_password: MySecurePassword
 
 # Remove

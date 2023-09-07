@@ -3,7 +3,7 @@
     path: /etc/hosts
     marker: "# {mark} OPENFLIGHT IPA HOST ENTRY - DO NOT TOUCH"
     block: |
-      {{ ansible_default_ipv4.address |default(ansible_all_ipv4_addresses[0]) }}    {{ ansible_fqdn }} {{ ansible_hostname }}.{{ cluster_name }} {{ ansible_hostname }}
+      {{ ansible_default_ipv4.address |default(ansible_all_ipv4_addresses[0]) }}    {{ ansible_fqdn }} {{ ansible_hostname }}.{{ cluster_name }} {{ ansible_hostname }} {{ ipa_server }}.{{ ipa_domain }}
 
 - name: Allow IPA services through firewall
   firewalld:
@@ -39,7 +39,7 @@
   command: "ipa-server-install --uninstall -U"
 
 - name: Install IPA server
-  command: "ipa-server-install -a {{ secure_admin_password }} --hostname {{ ansible_fqdn }} --ip-address={{ ansible_default_ipv4.address |default(ansible_all_ipv4_addresses[0]) }} -r {{ ansible_facts['nodename'].split('.')[1:] |join('.') |upper }} -p {{ secure_admin_password }} -n {{ ansible_facts['nodename'].split('.')[1:] |join('.') }} --no-ntp --setup-dns --forwarder={{ ansible_facts['dns']['nameservers'][0] }} --reverse-zone={{ (ansible_default_ipv4.address |default(ansible_all_ipv4_addresses[0]) |split('.'))[0:2] |reverse |join('.') }} --ssh-trust-dns --unattended"
+  command: "ipa-server-install -a {{ secure_admin_password }} --hostname {{ ipa_server }}.{{ ipa_domain }} --ip-address={{ ansible_default_ipv4.address |default(ansible_all_ipv4_addresses[0]) }} -r {{ ipa_domain |upper }} -p {{ secure_admin_password }} -n {{ ipa_domain }} --no-ntp --setup-dns --forwarder={{ ansible_facts['dns']['nameservers'][0] }} --reverse-zone={{ (ansible_default_ipv4.address |default(ansible_all_ipv4_addresses[0]) |split('.'))[0:2] |reverse |join('.') }} --ssh-trust-dns --unattended"
 
 - name: Set HBAC rules
   ipa_hbacrule:

@@ -10,7 +10,7 @@
     - update
 
 - name: Join IPA
-  command: "ipa-client-install --no-ntp --mkhomedir --ssh-trust-dns --force-join --realm={{ ansible_facts['nodename'].split('.')[1:] |join('.') |upper }} --server={{ ipa_fqdn }} -p admin -w {{ secure_admin_password }} --domain {{ ansible_facts['nodename'].split('.')[1:] |join('.') }} --unattended --hostname={{ ansible_fqdn }}"
+  command: "ipa-client-install --no-ntp --mkhomedir --ssh-trust-dns --force-join --realm={{ ipa_domain |upper }} --server='{{ ipa_server }}.{{ ipa_domain }}' -p admin -w {{ secure_admin_password }} --domain {{ ipa_domain }} --unattended --hostname={{ ansible_fqdn }}"
   when:
     - not ipa_conf.stat.exists
   tags:

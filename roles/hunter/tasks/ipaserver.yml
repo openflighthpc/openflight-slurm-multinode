@@ -11,7 +11,7 @@
   ipa_host:
     name: "{{ item.fqdn }}"
     ip_address: "{{ item.ip }}"
-    ipa_host: "{{ ipa_fqdn }}"
+    ipa_host: "{{ ipa_server }}.{{ ipa_domain }}"
     ipa_user: admin
     ipa_pass: "{{ secure_admin_password }}"
     state: present
@@ -19,7 +19,7 @@
   loop: "{{ hunter_nodes }}"
   when:
     - "ipastatus.rc == 0"
-    - "item.fqdn != ipa_fqdn"
+    - "item.fqdn != (ipa_server + '.' + ipa_domain)"
   tags: 
     - never
     - pre
@@ -31,7 +31,7 @@
   loop: "{{ hunter_nodes }}"
   delegate_to: localhost
   when:
-    - "item.fqdn != ipa_fqdn"
+    - "item.fqdn != (ipa_server + '.' + ipa_domain)"
     - "ipastatus.rc == 0"
   tags: 
     - never

@@ -69,8 +69,10 @@ nfs_shares:
 # IPA Settings
 ## If false then do not proceed to setup IPA server or client
 ipa_use: true
-## The FQDN of the system to setup as the IPA server
-ipa_fqdn: "infra01.mycluster.cluster.local"
+## The short hostname of the system to setup as the IPA server
+ipa_server: "infra01"
+## The domain to be used by the IPA server
+ipa_domain: "cluster.example.com"
 ## Password for the 'admin' IPA user
 secure_admin_password: MySecurePassword
 

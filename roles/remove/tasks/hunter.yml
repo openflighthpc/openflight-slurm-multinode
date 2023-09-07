@@ -65,6 +65,7 @@
     ipa_host: "{{ ipa_server }}.{{ ipa_domain }}"
     ipa_user: admin
     ipa_pass: "{{ secure_admin_password }}"
+    update_dns: true
     state: absent
   loop: "{{ hunter_node_remove }}"
   when:

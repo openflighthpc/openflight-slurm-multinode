@@ -68,5 +68,6 @@
     state: absent
   loop: "{{ hunter_node_remove }}"
   when:
+    - "'ipa' in group_names"
     - "item.fqdn != (ipa_server + '.' + ipa_domain)"
     - ipa_use |bool

@@ -2,6 +2,8 @@
   stat:
     path: "/etc/ipa/default.conf"
   register: ipa_conf
+  failed_when: not ipa_conf.stat.exists
+  ignore_errors: true
   tags:
     - never
     - pre

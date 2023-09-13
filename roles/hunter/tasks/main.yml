@@ -1,6 +1,19 @@
 - name: Generic Hunter Tasks
   import_tasks: generic.yml
 
+- name: IPA Server Hunter Tasks
+  import_tasks: ipaserver.yml
+  when:
+    - "'ipa' in group_names"
+    - ipa_use |bool
+
+- name: IPA Client Hunter Tasks
+  import_tasks: ipaclient.yml
+  when:
+    - "'ipa' not in group_names"
+    - ipa_use |bool
+
 - name: Login Node Hunter Tasks
   import_tasks: login.yml
   when: "'login' in group_names"
+

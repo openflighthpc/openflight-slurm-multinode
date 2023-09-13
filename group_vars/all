@@ -66,6 +66,15 @@ nfs_shares:
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
 
+# IPA Settings
+## If false then do not proceed to setup IPA server or client
+ipa_use: true
+## The short hostname of the system to setup as the IPA server
+ipa_server: "infra01"
+## The domain to be used by the IPA server
+ipa_domain: "cluster.example.com"
+## Password for the 'admin' IPA user
+secure_admin_password: MySecurePassword
 
 # Remove
 

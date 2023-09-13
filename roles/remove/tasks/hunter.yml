@@ -57,3 +57,18 @@
     state: reloaded
   when:
     - not ansible_fqdn in remove_node
+
+- name: Remove from IPA 
+  ipa_host:
+    name: "{{ item.fqdn }}"
+    ip_address: "{{ item.ip }}"
+    ipa_host: "{{ ipa_server }}.{{ ipa_domain }}"
+    ipa_user: admin
+    ipa_pass: "{{ secure_admin_password }}"
+    update_dns: true
+    state: absent
+  loop: "{{ hunter_node_remove }}"
+  when:
+    - "'ipa' in group_names"
+    - "item.fqdn != (ipa_server + '.' + ipa_domain)"
+    - ipa_use |bool

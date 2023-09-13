@@ -4,6 +4,7 @@
   delegate_to: localhost
   tags:
     - pre
+    - update
 
 - name: Process hunter nodes
   set_fact:
@@ -12,6 +13,7 @@
   delegate_to: localhost
   tags:
     - pre
+    - update
 
 - name: Add hunter nodes to /etc/hosts
   blockinfile:

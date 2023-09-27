@@ -70,6 +70,7 @@
     state: present
     givenname: Test
     sn: User
+    loginshell: /bin/bash
     sshpubkey:
       - "{{ testuser_sshkey.public_key }}"
     ipa_pass: "{{ secure_admin_password }}"

@@ -2,7 +2,9 @@
   command: "sudo -i /opt/flight/bin/flight hunter list --plain"
   register: hunter_list
   delegate_to: localhost
+  run_once: true
   tags:
+    - never
     - pre
     - update
 
@@ -11,7 +13,9 @@
     hunter_nodes: "{{ hunter_nodes | default([]) +  [ {'label' : item.split('\t').4, 'ip' : item.split('\t').2, 'fqdn': item.split('\t').1, 'groups': item.split('\t').3} ] }}"
   loop: "{{ hunter_list.stdout_lines }}"
   delegate_to: localhost
+  run_once: true
   tags:
+    - never
     - pre
     - update
 
@@ -24,6 +28,7 @@
       {{ item.ip }}    {{ item.fqdn }} {{ item.fqdn.split('.') |first }} {{ item.label }}
       {% endfor %}
   tags:
+    - never
     - pre
 
 - name: Collect hunter mac addresses
@@ -33,6 +38,7 @@
   when:
     - mac_firewall
   tags:
+    - never
     - pre
 
 - name: Collect hunter IP addresses
@@ -40,6 +46,7 @@
   register: hunter_ips
   delegate_to: localhost
   tags:
+    - never
     - pre
 
 - name: Add hunter node mac addresses to firewall
@@ -56,6 +63,7 @@
   when:
     - mac_firewall
   tags:
+    - never
     - pre
 
 - name: Add hunter node IP addresses to firewall
@@ -70,6 +78,7 @@
   delay: 1
   until: ip_out is not failed
   tags:
+    - never
     - pre
 
 - name: Reload firewall
@@ -77,6 +86,7 @@
     name: firewalld
     state: reloaded
   tags:
+    - never
     - pre
 
 - name: Set hunter label in prompt 
@@ -93,5 +103,6 @@
       {% endfor %}
       fi
   tags:
+    - never
     - pre
 

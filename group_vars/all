@@ -2,10 +2,12 @@
 cluster_name: mycluster
 
 ## The hostname of the NFS server
-nfs_server: ""
+### Default: The first node in the "login" group, otherwise empty
+nfs_server: "{{ groups['login'][0] | default('') }}"
 
 ## The hostname of the SLURM controller
-slurm_server: ""
+### Default: The first node in the "login" group, otherwise empty
+slurm_server: "{{ groups['login'][0] | default('') }}"
 
 ## Whether or not to do MAC-based firewall trusting
 mac_firewall: false

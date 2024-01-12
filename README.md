@@ -28,7 +28,12 @@ This playbook _configures_ the services within it, it does not perform any insta
     - `generate_certs`: Whether the playbook should attempt to generate SSL certs for the Web Suite (initially attempting a Let's Encrypt certificate and falling back to a self-signed if Let's Encrypt isn't able to reach the provided `access_host`) 
     - `compute_ip_range`: The network range for NFS server exports to be shared with
     - `hunter_hosts`: When set to true - this will make appropriate changes to `/etc/hosts` and system firewalls to trust hosts in [flight-hunter](https://github.com/openflighthpc/flight-hunter)
-- Create ansible inventory file (e.g. `mycluster.inv`) that looks like the following
+    - `ipa_use`: When set to true this will perform IPA operations to setup a server (optional) and clients and will require the following to be set appropriately
+        - `ipa_server`: The short hostname of the IPA server
+            - This defaults to the first node in the `ipa` group, if that doesn't exist then the string `infra01` will be used
+        - `ipa_domain`: The domain to be used for IPA connections 
+        - `secure_admin_password`: The password used for logging into the admin user and adding hosts to IPA
+- Create ansible inventory file (e.g. `mycluster.inv`) that looks like the following (note: The `ipa` group is optional and only used if `ipa_use` is set to true) 
   ```shell
   [login]
   chead1
@@ -36,6 +41,9 @@ This playbook _configures_ the services within it, it does not perform any insta
   [compute]
   cnode01
   cnode02
+
+  [ipa]
+  infra01
   ```
 - Run the playbook 
   ```shell

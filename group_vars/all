@@ -2,10 +2,12 @@
 cluster_name: mycluster
 
 ## The hostname of the NFS server
-nfs_server: ""
+### Default: The first node in the "login" group, otherwise empty
+nfs_server: "{{ groups['login'][0] | default('') }}"
 
 ## The hostname of the SLURM controller
-slurm_server: ""
+### Default: The first node in the "login" group, otherwise empty
+slurm_server: "{{ groups['login'][0] | default('') }}"
 
 ## Whether or not to do MAC-based firewall trusting
 mac_firewall: false
@@ -70,7 +72,7 @@ nfs_shares:
 ## If false then do not proceed to setup IPA server or client
 ipa_use: true
 ## The short hostname of the system to setup as the IPA server
-ipa_server: "infra01"
+ipa_server: "{{ hostvars[groups['ipa'][0]]['ansible_facts']['hostname'] if groups['ipa'][0] is defined else 'infra01' }}"
 ## The domain to be used by the IPA server
 ipa_domain: "cluster.example.com"
 ## Password for the 'admin' IPA user

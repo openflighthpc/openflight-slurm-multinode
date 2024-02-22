@@ -7,6 +7,10 @@
 
 - name: Turn on SLURM controller daemon
   service: name=flight-slurmctld state=restarted enabled=yes
+
+- name: Reload SLURM configuration
+  shell: "/opt/flight/opt/slurm/bin/scontrol reconfigure"
   tags:
+    - never
     - update
     - remove

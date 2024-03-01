@@ -1,16 +1,6 @@
 # General
 cluster_name: mycluster
 
-# FlightEnv Settings
-
-## The hostname or IP address for accessing Web Suite and VNC sessions on
-access_host: ""
-
-## If True this will attempt to generate a Let's Encrypt certificate for Web Suite
-## and fall back to a self-signed one if the Let's Encrypt service cannot reach
-## the provided access_host address
-generate_certs: true
-
 # IPA Settings
 ## If false then do not proceed to setup IPA server or client
 ipa_use: true

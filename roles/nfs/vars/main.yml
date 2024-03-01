@@ -10,24 +10,36 @@ nfs_shares:
   apps:
     server: "{{ nfs_server }}"
     export: "/export//apps"
+    export_owner: "{{ default_username }}"
+    export_group: ""
+    export_permissions: '0774'
     mountpoint: /opt/apps
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
   data:
     server: "{{ nfs_server }}"
     export: "/export/data"
+    export_owner: "{{ default_username }}"
+    export_group: ""
+    export_permissions: '0774'
     mountpoint: /opt/data
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
   service:
     server: "{{ nfs_server }}"
     export: "/export/service"
+    export_owner: "root"
+    export_group: "root"
+    export_permissions: '0770'
     mountpoint: /opt/service
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail
   site:
     server: "{{ nfs_server }}"
     export: "/export/site"
+    export_owner: "root"
+    export_group: "root"
+    export_permissions: '0770'
     mountpoint: /opt/site
     export_opts: "{{ compute_ip_range }}(rw,no_root_squash,sync)"
     mount_opts: intr,rsize=32768,wsize=32768,vers=3,_netdev,nofail

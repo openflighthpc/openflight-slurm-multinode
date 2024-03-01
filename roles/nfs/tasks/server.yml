@@ -2,7 +2,9 @@
   file:
     path: "{{ item.value.export }}"
     state: directory
-    mode: 0775
+    mode: "{{ item.value.export_permissions }}"
+    owner: "{{ item.value.export_owner }}"
+    group: "{{ (item.value.export_group != "") |ternary(item.value.export_group, omit) }}"
   with_dict: "{{ nfs_shares }}"
 
 - name: Create export file

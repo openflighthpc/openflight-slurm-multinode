@@ -1,6 +1,6 @@
 ## The hostname of the NFS server
 ### Default: The first node in the "storage" group (if present) then first in "login" group, otherwise empty
-nfs_server: "{{ groups['storage'] | default(groups['login'][0] | default('')) }}"
+nfs_server: "{{ groups['storage'][0] | default(groups['login'][0] | default('')) }}"
 
 ## IP range for NFS exports
 compute_ip_range: "10.10.0.0/16"

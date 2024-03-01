@@ -1,10 +1,6 @@
 # General
 cluster_name: mycluster
 
-# Shared User
-default_username: flight
-default_user_password: '0penfl1ght'
-
 # FlightEnv Settings
 
 ## The hostname or IP address for accessing Web Suite and VNC sessions on

@@ -4,7 +4,7 @@
 
 - name: NFS Client Configuration
   import_tasks: client.yml
-  when: "'compute' in group_names" 
+  when: "('compute' in group_names) or (nfs_server != inventory_hostname and 'login' in group_names)" 
 
 - name: NFS Generic Configuration
   import_tasks: generic.yml

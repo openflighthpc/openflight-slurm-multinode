@@ -1,10 +1,6 @@
 # General
 cluster_name: mycluster
 
-## The hostname of the SLURM controller
-### Default: The first node in the "login" group, otherwise empty
-slurm_server: "{{ groups['login'][0] | default('') }}"
-
 ## Whether or not to do MAC-based firewall trusting
 mac_firewall: false
 

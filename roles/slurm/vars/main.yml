@@ -1,0 +1,3 @@
+## The hostname of the SLURM controller
+### Default: The first node in the "login" group, otherwise empty
+slurm_server: "{{ groups['login'][0] | default('') }}"

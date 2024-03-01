@@ -1,9 +1,6 @@
 # General
 cluster_name: mycluster
 
-## Whether or not to do MAC-based firewall trusting
-mac_firewall: false
-
 # Shared User
 default_username: flight
 default_user_password: '0penfl1ght'
@@ -17,11 +14,6 @@ access_host: ""
 ## and fall back to a self-signed one if the Let's Encrypt service cannot reach
 ## the provided access_host address
 generate_certs: true
-
-## If true this will generate host entries and add firewall rules from the information
-## stored in flight-hunter such that hunter labels will resolve to the correct hosts
-## and be trusted by all hosts in the playbook
-hunter_hosts: true
 
 # IPA Settings
 ## If false then do not proceed to setup IPA server or client

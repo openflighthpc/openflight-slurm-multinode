@@ -9,7 +9,7 @@ compute_ip_range: "10.10.0.0/16"
 nfs_shares:
   apps:
     server: "{{ nfs_server }}"
-    export: "/export//apps"
+    export: "/export/apps"
     export_owner: "{{ default_username }}"
     export_group: ""
     export_permissions: '0774'

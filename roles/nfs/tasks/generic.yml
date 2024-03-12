@@ -4,6 +4,24 @@
     state: directory
     mode: 0775
   with_dict: "{{ nfs_shares }}"
+  tags: 
+    - update
+
+- name: Update fstab file
+  blockinfile:
+    path: /etc/fstab
+    marker: "# {mark} FLIGHT REMOTE NFS ENTRIES - DO NOT TOUCH"
+    block: |
+      {% for item in nfs_shares|dict2items %}
+      {% if item.value.server in groups.all %}
+      {% if inventory_hostname != item.value.server %}
+      {{ item.value.server }}:{{ item.value.export }}    {{ item.value.mountpoint }}    nfs    {{ item.value.mount_opts }}    0 0
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+    state: present
+  tags:
+    - update
 
 - name: Mount NFS exports
   command: mount -a

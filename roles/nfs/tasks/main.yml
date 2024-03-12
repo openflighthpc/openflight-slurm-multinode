@@ -1,10 +1,6 @@
 - name: NFS Server Configuration
   import_tasks: server.yml
-  when: "nfs_server == inventory_hostname"
-
-- name: NFS Client Configuration
-  import_tasks: client.yml
-  when: "('compute' in group_names) or (nfs_server != inventory_hostname and 'login' in group_names)" 
+  when: "inventory_hostname in nfs_shares |json_query('*.server') |unique"
 
 - name: NFS Generic Configuration
   import_tasks: generic.yml

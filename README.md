@@ -19,7 +19,7 @@ This playbook _configures_ the services within it, it does not perform any insta
 - Set variables
     - `cluster_name`: The name for this cluster to go by, it will appear in the command prompt and web suite
     - `default_nfs_server`: The hostname or IP of the default NFS server
-        - This defaults to empty, if left empty then no NFS mounts will be setup. Additional mounts can be added to `roles/nfs/vars/main.yml` following the style of the existing mounts. If NFS servers to be setup are to be setup with this playbook then the `server` key must match the `inventory_hostname` of the NFS server to be configured.
+        - This defaults to empty, if left empty then no NFS mounts will be setup. Additional mounts can be added to `roles/nfs/vars/main.yml` following the style of the existing mounts. The NFS servers to be setup will need to be done with this playbook so the `server` key must match the `inventory_hostname` of the NFS server to be configured.
     - `slurm_server`: The hostname or IP of the SLURM controller
         - This defaults to the first node in the `login` group as that will also be configured as the SLURM controller
     - `default_username`: The default user on the system (e.g. on a Flight Solo image this will be `flight`) 

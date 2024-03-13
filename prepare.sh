@@ -12,3 +12,7 @@ dnf module reset -y idm
 dnf module enable -y idm:DL1
 dnf module install -y idm:DL1/dns
 ansible-galaxy collection install 'community.general:>6.6.0' --upgrade
+
+# Ensure jmespath installed for use of json_query, using python ansible is looking at
+PYTHON="$(ansible --version |grep 'python version' |sed 's/.*(//g;s/)//g')
+$PYTHON -m pip install jmespath

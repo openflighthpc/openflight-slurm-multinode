@@ -3,5 +3,7 @@
   when: "inventory_hostname in nfs_shares |json_query('*.server') |unique or ansible_hostname in nfs_shares |json_query('*.server') |unique"
 
 - name: NFS Generic Configuration
-  import_tasks: generic.yml
-
+  include_tasks: generic.yml
+  tags:
+    - update
+    - remove

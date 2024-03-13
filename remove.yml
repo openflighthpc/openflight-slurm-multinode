@@ -4,4 +4,6 @@
   gather_facts: True
   roles:
     - slurm
+    - nfs
+    - hunter
     - remove

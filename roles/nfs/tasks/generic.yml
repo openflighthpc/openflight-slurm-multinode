@@ -13,8 +13,8 @@
     marker: "# {mark} FLIGHT REMOTE NFS ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in nfs_shares|dict2items %}
-      {% if item.value.server in groups.all %}
-      {% if inventory_hostname != item.value.server %}
+      {% if groups.all is search(item.value.server) %}
+      {% if inventory_hostname != item.value.server and ansible_hostname != item.value.server %}
       {{ item.value.server }}:{{ item.value.export }}    {{ item.value.mountpoint }}    nfs    {{ item.value.mount_opts }}    0 0
       {% endif %}
       {% endif %}

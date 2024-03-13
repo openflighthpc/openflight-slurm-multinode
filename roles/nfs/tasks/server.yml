@@ -6,7 +6,7 @@
     owner: "{{ (item.value.export_owner is defined and item.value.export_owner != '') |ternary(item.value.export_owner, omit) }}"
     group: "{{ (item.value.export_group is defined and item.value.export_group != '') |ternary(item.value.export_group, omit) }}"
   with_dict: "{{ nfs_shares }}"
-  when: "inventory_hostname == item.value.server"
+  when: "inventory_hostname == item.value.server or ansible_hostname == item.value.server"
 
 - name: Create export file
   blockinfile:
@@ -14,7 +14,7 @@
     marker: "# {mark} FLIGHT EXPORT ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in nfs_shares|dict2items %}
-      {% if inventory_hostname == item.value.server %}
+      {% if inventory_hostname == item.value.server or ansible_hostname == item.value.server %}
       {{ item.value.export }} {{ item.value.export_opts }}
       {% endif %}
       {% endfor %}
@@ -27,7 +27,7 @@
     block: |
       {% for item in nfs_shares|dict2items %}
       {% if item.value.export != item.value.mountpoint %}
-      {% if inventory_hostname == item.value.server %}
+      {% if inventory_hostname == item.value.server or ansible_hostname == item.value.server %}
       {{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0
       {% endif %}
       {% endif %}

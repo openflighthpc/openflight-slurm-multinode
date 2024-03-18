@@ -2,7 +2,9 @@
   file:
     path: "{{ item.value.mountpoint }}"
     state: directory
-    mode: 0775
+    mode: "{{ (item.value.export_permissions is defined and item.value.export_permissions != '') |ternary(item.value.export_permissions, omit) }}"
+    owner: "{{ (item.value.export_owner is defined and item.value.export_owner != '') |ternary(item.value.export_owner, omit) }}"
+    group: "{{ (item.value.export_group is defined and item.value.export_group != '') |ternary(item.value.export_group, omit) }}"
   with_dict: "{{ nfs_shares }}"
   tags: 
     - update

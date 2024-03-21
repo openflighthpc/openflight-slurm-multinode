@@ -51,6 +51,7 @@
     name: allow_all
     state: absent
     ipa_pass: "{{ secure_admin_password }}"
+    ipa_host: "{{ ipa_server }}"
 
 - name: Create Generic Cluster Hostgroup
   ipa_hostgroup: 
@@ -58,6 +59,7 @@
     description: "All cluster hosts"
     state: present
     ipa_pass: "{{ secure_admin_password }}"
+    ipa_host: "{{ ipa_server }}"
 
 - name: Create SSH Pub Key for Test User
   openssh_keypair:
@@ -74,6 +76,7 @@
     sshpubkey:
       - "{{ testuser_sshkey.public_key }}"
     ipa_pass: "{{ secure_admin_password }}"
+    ipa_host: "{{ ipa_server }}"
 
 - name: Create Generic Cluster User Group
   ipa_group: 
@@ -81,6 +84,7 @@
     description: "Generic cluster users" 
     state: present
     ipa_pass: "{{ secure_admin_password }}" 
+    ipa_host: "{{ ipa_server }}"
     user:
       - testuser
     append: true
@@ -97,3 +101,4 @@
     service:
       - sshd 
     ipa_pass: "{{ secure_admin_password }}" 
+    ipa_host: "{{ ipa_server }}"

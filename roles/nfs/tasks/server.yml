@@ -2,8 +2,11 @@
   file:
     path: "{{ item.value.export }}"
     state: directory
-    mode: 0775
+    mode: "{{ (item.value.export_permissions is defined and item.value.export_permissions != '') |ternary(item.value.export_permissions, omit) }}"
+    owner: "{{ (item.value.export_owner is defined and item.value.export_owner != '') |ternary(item.value.export_owner, omit) }}"
+    group: "{{ (item.value.export_group is defined and item.value.export_group != '') |ternary(item.value.export_group, omit) }}"
   with_dict: "{{ nfs_shares }}"
+  when: "inventory_hostname == item.value.server or ansible_hostname == item.value.server"
 
 - name: Create export file
   blockinfile:
@@ -11,18 +14,22 @@
     marker: "# {mark} FLIGHT EXPORT ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in nfs_shares|dict2items %}
+      {% if inventory_hostname == item.value.server or ansible_hostname == item.value.server %}
       {{ item.value.export }} {{ item.value.export_opts }}
+      {% endif %}
       {% endfor %}
     state: present
 
 - name: Create fstab file
   blockinfile:
     path: /etc/fstab
-    marker: "# {mark} FLIGHT NFS ENTRIES - DO NOT TOUCH"
+    marker: "# {mark} FLIGHT LOCAL NFS ENTRIES - DO NOT TOUCH"
     block: |
       {% for item in nfs_shares|dict2items %}
       {% if item.value.export != item.value.mountpoint %}
+      {% if inventory_hostname == item.value.server or ansible_hostname == item.value.server %}
       {{ item.value.export }}    {{ item.value.mountpoint }}    none    defaults,bind    0 0
+      {% endif %}
       {% endif %}
       {% endfor %}
     state: present

@@ -1,0 +1,7 @@
+## If true this will generate host entries and add firewall rules from the information
+## stored in flight-hunter such that hunter labels will resolve to the correct hosts
+## and be trusted by all hosts in the playbook
+hunter_hosts: true
+
+## Whether or not to do MAC-based firewall trusting
+mac_firewall: false

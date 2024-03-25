@@ -2,8 +2,36 @@
   file:
     path: "{{ item.value.mountpoint }}"
     state: directory
-    mode: 0775
   with_dict: "{{ nfs_shares }}"
+  tags: 
+    - update
+
+- name: Update fstab file
+  blockinfile:
+    path: /etc/fstab
+    marker: "# {mark} FLIGHT REMOTE NFS ENTRIES - DO NOT TOUCH"
+    block: |
+      {% for item in nfs_shares|dict2items %}
+      {% if groups.all is search(item.value.server) %}
+      {% if inventory_hostname != item.value.server and ansible_hostname != item.value.server %}
+      {% if not remove_node is search(item.value.server) %}
+      {{ item.value.server }}:{{ item.value.export }}    {{ item.value.mountpoint }}    nfs    {{ item.value.mount_opts }}    0 0
+      {% endif %}
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+    state: present
+  tags:
+    - update
+    - remove
+
+- name: Unmount Removed NFS Mounts
+  command: "umount {{ item.value.mountpoint }}"
+  with_dict: "{{ nfs_shares }}"
+  when: "remove_node is search(item.value.server) and inventory_hostname != item.value.server and ansible_hostname != item.value.server"
+  tags:
+    - never
+    - remove
 
 - name: Mount NFS exports
   command: mount -a

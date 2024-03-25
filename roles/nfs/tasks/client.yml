@@ -1,9 +1,0 @@
-- name: Create fstab file
-  blockinfile:
-    path: /etc/fstab
-    marker: "# {mark} FLIGHT EXPORT ENTRIES - DO NOT TOUCH"
-    block: |
-      {% for item in nfs_shares|dict2items %}
-      {{ item.value.server }}:{{ item.value.export }}    {{ item.value.mountpoint }}    nfs    {{ item.value.mount_opts }}    0 0
-      {% endfor %}
-    state: present
